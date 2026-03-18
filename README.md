@@ -5,7 +5,7 @@ and **MongoDB Atlas** — structured with **MVC architecture**, secured with
 **JWT Authentication**, and deployed live on Render.
 
 ## 🚀 Live Demo
-🔗 **API Base URL:** `https://your-app-name.onrender.com`
+🔗 **API Base URL:** `updating soon....`
 
 ## ✨ Features
 - Full **CRUD** operations — Create, Read, Update, Delete

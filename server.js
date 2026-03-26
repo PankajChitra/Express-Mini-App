@@ -6,7 +6,7 @@ import express from 'express';
 import logger from './middleware/logger.js';
 import errorHandler from './middleware/errorhandler.js';
 import noteRoutes from './routes/routes.js';
-import authRoute from './routes/authroute.js';
+import authRoute from './routes/authRoute.js';
 
 // import path from 'path';
 // import { fileURLToPath } from 'url';

@@ -1,30 +1,28 @@
-
+// routes/routes.js
 import express from 'express';
 const router = express.Router();
 
 import { body } from 'express-validator';
-
-import { getAllNotes, getNoteById, createNote, updateNote, deleteNote } 
+import { getAllNotes, getNoteById, createNote, updateNote, deleteNote }
 from '../controller/controller.js';
+import { protect } from '../middleware/authmiddleware.js';
 
-// CRUD Operations for notes
+// GET all notes
+router.get('/', protect, getAllNotes);
 
-// View / Read -> get
-router.get('/', getAllNotes);
-router.get('/:id', getNoteById);
+// GET one note
+router.get('/:id', protect, getNoteById);
 
-// create -> post
-router.post('/', [
-  
-  body('name').notEmpty().withMessage('Name is required'),
-  body('age').isNumeric().withMessage('Age must be a number'),
-  body('weight').isNumeric().withMessage('Weight must be a number')
+// POST create note ✅ fixed validation
+router.post('/',protect, [
+  body('title').notEmpty().withMessage('Title is required'),
+  body('body').isLength({ min: 5 }).withMessage('Body must be at least 5 characters')
 ], createNote);
 
-// update -> put
-router.put('/:id', updateNote);
+// PUT update note
+router.put('/:id', protect, updateNote);
 
-// delete -> delete
-router.delete('/:id', deleteNote);
+// DELETE note
+router.delete('/:id', protect, deleteNote);
 
 export default router;

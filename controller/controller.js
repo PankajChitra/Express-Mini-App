@@ -1,11 +1,12 @@
 import { validationResult } from 'express-validator';
-import user from '../models/usermodule.js';
+import note from '../models/notemodule.js';
+
 
 
 // view / read -> get
 export const getAllNotes = async (req, res) => {
     try {
-        const notes = await user.find();
+        const notes = await note.find();
         res.status(200).json({ count: notes.length, notes });   
     } catch (error) {
         res.status(500).json({ error: 'Internal server error' });
@@ -13,8 +14,8 @@ export const getAllNotes = async (req, res) => {
 };
 export const getNoteById = async (req, res) => {
     try {
-        const note = await user.findById(req.params.id);
-        if (!note) return res.status(404).json({ error: 'user not found' });
+        const note = await note.findById(req.params.id);
+        if (!note) return res.status(404).json({ error: 'Note not found' });
         res.status(200).json({ note });
     } catch (error) {
         res.status(500).json({ error: 'Internal server error' });
@@ -28,16 +29,16 @@ export const createNote = async (req, res) => {
         return res.status(400).json({ errors: errors.array() });
 
     const { name , age , weight } = req.body;
-    const newNote = new user({ name, age, weight });
+    const newNote = new note({ name, age, weight });
     await newNote.save();
-    // await user.save(newNote);
+    // await note.save(newNote);
     res.status(201).json({ message: 'Note created', note: newNote });
 };
 
 // update -> put
 export const updateNote = async (req, res) => {
     try {
-        const note = await user.findById(req.params.id);
+        const note = await note.findById(req.params.id);
         if (!note) return res.status(404).json({ error: 'Note not found' });
         const { name, age, weight } = req.body;
         if (name) note.name = name;
@@ -54,7 +55,7 @@ export const updateNote = async (req, res) => {
 // delete -> delete
 export const deleteNote = async (req, res) => {
     try {
-        const note = await user.findById(req.params.id);
+        const note = await note.findById(req.params.id);
         if (!note) return res.status(404).json({ error: 'Note not found' });
         await note.remove();
         res.status(200).json({ message: 'Note deleted' });

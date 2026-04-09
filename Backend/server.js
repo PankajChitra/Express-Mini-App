@@ -24,24 +24,10 @@ const allowedOrigins = [
   'https://your-app.vercel.app'
 ].filter(Boolean);
 
-app.use(
-  cors({
-    origin(origin, callback) {
-      // Allow requests without origin (curl/Postman/mobile clients).
-      if (!origin) {
-        return callback(null, true);
-      }
-
-      if (allowedOrigins.includes(origin)) {
-        return callback(null, true);
-      }
-
-      return callback(new Error('CORS: Origin not allowed'));
-    },
-    credentials: true
-  })
-);
-
+app.use(cors({
+  origin: "https://notesapi-tau.vercel.app/",
+  credentials: true
+}));
 app.use('/api/notes', noteRoutes);
 app.use('/api/auth', authRoute);
 app.use(errorHandler);

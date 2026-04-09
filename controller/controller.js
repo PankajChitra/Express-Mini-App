@@ -1,22 +1,22 @@
 import { validationResult } from 'express-validator';
-import note from '../models/notemodule.js';
+import Note from '../models/notemodule.js';
 
 
 
 // view / read -> get
 export const getAllNotes = async (req, res) => {
     try {
-        const notes = await note.find();
-        res.status(200).json({ count: notes.length, notes });   
+        const notes = await Note.find({ user: req.user._id }).sort({ createdAt: -1 });
+        res.status(200).json({ success: true, data: notes });
     } catch (error) {
         res.status(500).json({ error: 'Internal server error' });
     }
 };
 export const getNoteById = async (req, res) => {
     try {
-        const note = await note.findById(req.params.id);
+        const note = await Note.findOne({ _id: req.params.id, user: req.user._id });
         if (!note) return res.status(404).json({ error: 'Note not found' });
-        res.status(200).json({ note });
+        res.status(200).json({ success: true, data: note });
     } catch (error) {
         res.status(500).json({ error: 'Internal server error' });
     }
@@ -28,37 +28,43 @@ export const createNote = async (req, res) => {
     if (!errors.isEmpty())
         return res.status(400).json({ errors: errors.array() });
 
-    const { name , age , weight } = req.body;
-    const newNote = new note({ name, age, weight });
-    await newNote.save();
-    // await note.save(newNote);
-    res.status(201).json({ message: 'Note created', note: newNote });
+    const { title, body, category, color } = req.body;
+    const newNote = await Note.create({ 
+        title, 
+        body, 
+        category: category || 'personal',
+        color: color || '#ffd93d',
+        user: req.user._id 
+    });
+    res.status(201).json({ success: true, data: newNote });
 };
 
 // update -> put
 export const updateNote = async (req, res) => {
     try {
-        const note = await note.findById(req.params.id);
+        const note = await Note.findOne({ _id: req.params.id, user: req.user._id });
         if (!note) return res.status(404).json({ error: 'Note not found' });
-        const { name, age, weight } = req.body;
-        if (name) note.name = name;
-        if (age) note.age = age;
-        if (weight) note.weight = weight;
+
+        const { title, body, category, color } = req.body;
+        if (typeof title === 'string') note.title = title;
+        if (typeof body === 'string') note.body = body;
+        if (typeof category === 'string') note.category = category;
+        if (typeof color === 'string') note.color = color;
+
         await note.save();
-        res.status(200).json({ message: 'Note updated', note });
+        res.status(200).json({ success: true, data: note });
     } catch (error) {
         res.status(500).json({ error: 'Internal server error' });
     }
-    res.status(200).json({ message: 'Note updated', note });
 };
 
 // delete -> delete
 export const deleteNote = async (req, res) => {
     try {
-        const note = await note.findById(req.params.id);
+        const note = await Note.findOne({ _id: req.params.id, user: req.user._id });
         if (!note) return res.status(404).json({ error: 'Note not found' });
-        await note.remove();
-        res.status(200).json({ message: 'Note deleted' });
+        await Note.deleteOne({ _id: note._id });
+        res.status(200).json({ success: true, message: 'Note deleted' });
     } catch (error) {
         res.status(500).json({ error: 'Internal server error' });
     }

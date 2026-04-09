@@ -1,53 +1,38 @@
 import mongoose from 'mongoose';
-const { Schema, model } = mongoose;
 
+const { Schema, model, models } = mongoose;
 
-const MySchema = new Schema({
-  name: {
-    type: String,
-    required: true,
-    maxlength: 50
-  },
-  email : {
-        type: String,
-        required: true,
-        unique: true
-    } ,
-  password : {
+const NoteSchema = new Schema(
+  {
+    title: {
       type: String,
       required: true,
-      select: false 
+      trim: true,
+      maxlength: 120
+    },
+    body: {
+      type: String,
+      required: true,
+      trim: true
+    },
+    category: {
+      type: String,
+      enum: ['personal', 'work', 'ideas', 'todo', 'archive'],
+      default: 'personal'
+    },
+    color: {
+      type: String,
+      default: '#ffd93d'
+    },
+    user: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+      required: true
+    }
   },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
-});
+  { timestamps: true }
+);
 
-const userModel = model('User', MySchema);
+const Note = models.Note || model('Note', NoteSchema);
 
-export default userModel;
-
-// import mongoose from 'mongoose';
-// const { Schema, model, models } = mongoose;
-
-// const NoteSchema = new Schema({
-//  name: {
-//     type: String,
-//     required: true,
-//     maxlength: 50
-//   },
-//   email : {
-//         type: String,
-//         required: true,
-//         unique: true
-//     } ,
-//   password : {
-//       type: String,
-//       required: true,
-//       select: false 
-//   }
-// }, { timestamps: true });
-
-// const Note = models.Note || model('Note', NoteSchema);
-// export default Note;
+export default Note;

@@ -1,222 +1,65 @@
-# 📝 Notes API
+# Notes API Monorepo
 
-A full-stack Notes application with **JWT-based authentication** and a **RESTful API** backend. Users can register, log in, and manage their personal notes — all protected by secure token-based authorization.
+This repository is organized as a monorepo with separate apps for API and client.
 
----
+## Structure
 
-## 🚀 Tech Stack
+```text
+.
+├── Backend/   # Express + MongoDB API
+└── Frontend/  # Vite + React app
+```
+
+## App Setup
 
 ### Backend
-| Technology | Purpose |
-|---|---|
-| Node.js + Express.js | Server & REST API |
-| MongoDB + Mongoose | Database & ODM |
-| JSON Web Tokens (JWT) | Authentication |
-| bcrypt | Password hashing |
-| ES Modules (`import/export`) | Modern JS syntax |
+
+```bash
+cd Backend
+npm install
+npm run dev
+```
 
 ### Frontend
-| Technology | Purpose |
-|---|---|
-| React.js | UI Library |
-| Axios / Fetch API | HTTP requests |
-| React Router | Client-side routing |
-
----
-
-## ✨ Features
-
-- 🔐 **User Authentication** — Register & Login with JWT
-- 📋 **CRUD Operations** — Create, Read, Update, Delete notes
-- 🛡️ **Protected Routes** — Notes are user-specific; unauthorized access is blocked
-- 🔑 **Auth Middleware** — Every protected endpoint validates the JWT token
-- 🔍 **Search & Filter** — Search notes by title or content using query params
-- 🗄️ **Persistent Storage** — Notes saved in MongoDB, tied to the logged-in user
-
----
-
-## 📁 Project Structure
-
-```
-notes-api/
-│
-├── backend/
-│   ├── controller/
-│   │   ├── authController.js      # Register & Login logic
-│   │   └── notesController.js     # CRUD logic for notes
-│   │
-│   ├── middleware/
-│   │   └── authMiddleware.js      # JWT verification middleware
-│   │
-│   ├── models/
-│   │   ├── User.js                # User schema (Mongoose)
-│   │   └── Note.js                # Note schema (Mongoose)
-│   │
-│   ├── routes/
-│   │   ├── authRoute.js           # /api/auth — register, login
-│   │   └── routes.js              # /api/notes — CRUD routes
-│   │
-│   ├── .env                       # Environment variables (not committed)
-│   ├── package.json
-│   └── index.js                   # App entry point
-│
-└── frontend/
-    ├── src/
-    │   ├── components/            # Reusable UI components
-    │   ├── pages/                 # Login, Register, Dashboard
-    │   ├── App.jsx
-    │   └── main.jsx
-    │
-    ├── .env                       # Frontend env variables
-    └── package.json
-```
-
----
-
-## ⚙️ Getting Started
-
-### Prerequisites
-
-Make sure you have the following installed:
-
-- [Node.js](https://nodejs.org/) (v18+ recommended)
-- [npm](https://www.npmjs.com/)
-- [MongoDB](https://www.mongodb.com/) (local instance or [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) cloud URI)
-- [Git](https://git-scm.com/)
-
----
-
-### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/notes-api.git
-cd notes-api
+cd Frontend
+npm install
+npm run dev
 ```
 
----
+## Monorepo Scripts (from root)
 
-### 2. Setup the Backend
+Install root tooling:
 
 ```bash
-cd backend
 npm install
 ```
 
-Create a `.env` file inside the `backend/` directory:
-
-```env
-PORT=5000
-MONGO_URI=your_mongodb_connection_string
-JWT_SECRET=your_super_secret_key
-```
-
-> 💡 Replace `your_mongodb_connection_string` with your MongoDB Atlas URI or `mongodb://localhost:27017/notesdb` for local MongoDB.
-
-Start the backend server:
+Install both app dependencies:
 
 ```bash
-node index.js
+npm run install:all
 ```
 
-The server will run at: `http://localhost:5000`
-
----
-
-### 3. Setup the Frontend
-
-Open a new terminal window:
+Run one app:
 
 ```bash
-cd frontend
-npm install
+npm run dev:backend
+npm run dev:frontend
 ```
 
-Create a `.env` file inside the `frontend/` directory:
-
-```env
-VITE_API_URL=http://localhost:5000
-```
-
-> ⚠️ If you're using Create React App instead of Vite, use `REACT_APP_API_URL` instead.
-
-Start the frontend dev server:
+Run both apps together:
 
 ```bash
 npm run dev
 ```
 
-The app will run at: `http://localhost:5173`
+## Environment Files
 
----
-
-## 🔌 API Endpoints
-
-### Auth Routes — `/api/auth`
-
-| Method | Endpoint | Description | Auth Required |
-|---|---|---|---|
-| `POST` | `/api/auth/register` | Register a new user | ❌ |
-| `POST` | `/api/auth/login` | Login & receive JWT token | ❌ |
-
-#### Register — Request Body
-```json
-{
-  "name": "Pankaj",
-  "email": "pankaj@example.com",
-  "password": "yourpassword"
-}
-```
-
-#### Login — Request Body
-```json
-{
-  "email": "pankaj@example.com",
-  "password": "yourpassword"
-}
-```
-
-#### Login — Response
-```json
-{
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-  "user": {
-    "id": "64abc...",
-    "name": "Pankaj",
-    "email": "pankaj@example.com"
-  }
-}
-```
-
----
-
-### Notes Routes — `/api/notes`
-
-> 🔐 All notes routes require a valid JWT token in the `Authorization` header:
-> ```
-> Authorization: Bearer <your_token>
-> ```
-
-| Method | Endpoint | Description |
-|---|---|---|
-| `GET` | `/api/notes` | Get all notes of logged-in user |
-| `GET` | `/api/notes?search=keyword` | Search notes by title or content |
-| `POST` | `/api/notes` | Create a new note |
-| `PUT` | `/api/notes/:id` | Update a note by ID |
-| `DELETE` | `/api/notes/:id` | Delete a note by ID |
-
-#### Create Note — Request Body
-```json
-{
-  "title": "My First Note",
-  "content": "This is the content of my note."
-}
-```
-
----
-
-## 🧪 Testing the API
-
-You can test all endpoints using [Postman](https://www.postman.com/) or [Thunder Client](https://www.thunderclient.com/) (VS Code extension):
+- Backend env file should be placed at `Backend/.env`.
+- Frontend env file should be placed at `Frontend/.env` if needed.
+- Frontend API URL can be set with `VITE_API_URL`.
 
 1. Register a user → `POST /api/auth/register`
 2. Login → `POST /api/auth/login` → Copy the returned `token`

@@ -83,7 +83,7 @@ npm install
 
 # 3. Create .env file
 PORT=3000
-MONGO_URI=your_mongodb_atlas_uri
+MONGODB_URI=your_mongodb_atlas_uri
 JWT_SECRET=your_jwt_secret
 
 # 4. Run development server

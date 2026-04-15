@@ -4,7 +4,7 @@ A secure, scalable REST API for managing personal notes — built with Node.js, 
 
 **Live Demo**
 - Frontend: https://notesapi-tau.vercel.app
-- Backend: https://express-mini-app-1.onrender.com
+- Backend: https://notes-api-oyhd.onrender.com
 
 ---
 

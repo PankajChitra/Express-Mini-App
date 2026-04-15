@@ -4,7 +4,7 @@ import axios from 'axios';
 const API = axios.create({
   // In development this works with Vite proxy (see vite.config.js).
   // In production set VITE_API_URL to your backend URL.
-  baseURL: import.meta.env.VITE_API_URL || '/',
+  baseURL: import.meta.env.VITE_API_URL ,
 });
 
 // Attach token automatically to every request

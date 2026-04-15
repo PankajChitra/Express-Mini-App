@@ -3,12 +3,15 @@ import express from 'express';
 const router = express.Router();
 
 import { body } from 'express-validator';
-import { getAllNotes, getNoteById, createNote, updateNote, deleteNote }
+import { getAllNotes, getNoteById, createNote, updateNote, deleteNote,getAllNotesAdmin, adminDeleteNote }
 from '../controller/controller.js';
-import { protect } from '../middleware/authmiddleware.js';
+import { protect ,authorizeRoles} from '../middleware/authmiddleware.js';
 
 // GET all notes
 router.get('/', protect, getAllNotes);
+
+// ADMIN only — see all notes from every user
+router.get('/admin/all', protect, authorizeRoles('admin'), getAllNotesAdmin);
 
 // GET one note
 router.get('/:id', protect, getNoteById);
@@ -24,5 +27,8 @@ router.put('/:id', protect, updateNote);
 
 // DELETE note
 router.delete('/:id', protect, deleteNote);
+
+// ADMIN only — hard delete any note by id
+router.delete('/admin/:id', protect, authorizeRoles('admin'), adminDeleteNote);
 
 export default router;

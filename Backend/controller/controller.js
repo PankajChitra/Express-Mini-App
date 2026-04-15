@@ -70,4 +70,30 @@ export const deleteNote = async (req, res) => {
     }
 };
 
+// ─── ADMIN ONLY ───────────────────────────────────────────────────────────────
+
+// GET /admin/all — fetch all notes from every user
+export const getAllNotesAdmin = async (req, res) => {
+    try {
+        const notes = await Note.find()
+            .populate('user', 'name email role')  // shows who owns each note
+            .sort({ createdAt: -1 });
+        res.status(200).json({ success: true, count: notes.length, data: notes });
+    } catch (error) {
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
+// DELETE /admin/:id — admin can delete any note regardless of owner
+export const adminDeleteNote = async (req, res) => {
+    try {
+        const note = await Note.findById(req.params.id);
+        if (!note) return res.status(404).json({ error: 'Note not found' });
+        await Note.deleteOne({ _id: note._id });
+        res.status(200).json({ success: true, message: 'Note deleted by admin' });
+    } catch (error) {
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
 // export default { getAllNotes, getNoteById, createNote, updateNote, deleteNote };
